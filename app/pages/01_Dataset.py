@@ -7,7 +7,8 @@ st.title("📂 Dataset")
 
 @st.cache_data
 def load_data():
-    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    base = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
+    base = os.path.normpath(base)
     with open(os.path.join(base, 'data/raw/streaming_users_dirty.json'), 'r', encoding='utf-8') as f:
         raw = pd.DataFrame(json.load(f))
     clean = pd.read_csv(os.path.join(base, 'data/processed/streaming_users_clean.csv'),
@@ -69,7 +70,7 @@ st.dataframe(clean.head(50), use_container_width=True)
 st.markdown("---")
 st.subheader("Log de transformaciones")
 try:
-    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    base = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
     log = pd.read_csv(os.path.join(base, 'logs/pipeline_log.csv'))
     st.dataframe(log, use_container_width=True)
 except FileNotFoundError:

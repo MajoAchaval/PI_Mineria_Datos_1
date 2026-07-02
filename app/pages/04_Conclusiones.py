@@ -10,7 +10,7 @@ st.title("📝 Conclusiones")
 
 @st.cache_data
 def load_data():
-    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    base = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
     return pd.read_csv(os.path.join(base, 'data/processed/streaming_users_clean.csv'),
                        parse_dates=['last_login_date'])
 
