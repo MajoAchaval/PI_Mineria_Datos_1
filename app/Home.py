@@ -23,7 +23,7 @@ with col1:
     st.info("""
     **Materia:** Minería de Datos 1  
     **Comisión:** Turno Tarde, Nodo  
-    **Autora:** Achával María José  
+    **Integrante:** Achával María José  
     **Fecha de entrega:** 06/07/2026  
     """)
 
