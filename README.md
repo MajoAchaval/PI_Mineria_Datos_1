@@ -6,7 +6,7 @@
 ## Información general
 
 Proyecto Integrador de la asignatura Minería de Datos 1.
-Grupo N°: [Completar] | Comisión: [Completar] | Integrantes: [Nombre 1] — [Nombre 2]
+Comisión: Turno Tarde, Nodo | Integrante: Achával María José
 
 ---
 
@@ -26,7 +26,7 @@ El archivo `streaming_users_dirty.json` contiene 8.160 registros de usuarios con
 `last_login_date` y `customer_support_tickets`. El dataset presenta problemas intencionales de
 calidad: valores negativos e imposibles, variantes de texto inconsistentes, fechas futuras y filas
 duplicadas. El dataset original se preserva sin modificaciones en `data/raw/`.
-Referencia: Cátedra de Minería de Datos 1 — [Institución].
+Referencia: Cátedra de Minería de Datos 1.
 
 ---
 
@@ -88,10 +88,7 @@ entre 25 y 45 años, media 33.6 / mediana 33.0 —, distribución del tiempo de 
 por plan de suscripción (BV-1) — Premium (≈1.123 min) > Estándar (≈862 min) > Básico (≈587 min),
 confirmando la hipótesis de mayor consumo en planes superiores —, relación entre tickets de
 soporte y tiempo de visualización (BV-2) — sin tendencia clara, consumo estable en ≈700-800
-min/mes salvo el grupo con 5 tickets (≈1.029 min) —, y mapa de correlaciones entre variables
-numéricas (MV-1) — correlaciones prácticamente nulas (entre -0.002 y 0.007) entre `age`,
-`monthly_watch_time_mins` y `customer_support_tickets`, indicando que estas variables aportan
-información independiente entre sí.
+min/mes salvo el grupo con 5 tickets (≈1.029 min) —,y tiempo de visualización por país y plan de suscripción (MV-1) — el patrón Premium > Estándar > Básico se mantiene consistente en los 7 países analizados, sin variación significativa por mercado geográfico.
 
 ---
 
@@ -121,7 +118,7 @@ El repositorio se referencia en la página de inicio de la aplicación.
 ## Cómo ejecutar localmente
 
 ```bash
-git clone https://github.com/[usuario]/PI_Mineria_Datos_1.git
+git clone https://github.com/MajoAchaval/PI_Mineria_Datos_1.git
 cd PI_Mineria_Datos_1
 pip install -r requirements.txt
 # Ejecutar notebooks en orden (01 → 05)
