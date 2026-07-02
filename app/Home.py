@@ -24,6 +24,7 @@ with col1:
     **Materia:** Minería de Datos 1  
     **Comisión:** Turno Tarde, Nodo  
     **Autora:** Achával María José  
+    **Fecha de entrega:** 06/07/2026  
     """)
 
 with col2:

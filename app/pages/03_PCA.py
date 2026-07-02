@@ -96,11 +96,6 @@ st.markdown("---")
 st.subheader("Cargas (loadings) por componente")
 st.dataframe(loadings.round(4), use_container_width=True)
 
-fig, ax = plt.subplots(figsize=(6, 4))
-sns.heatmap(loadings, annot=True, fmt='.3f', cmap='RdBu_r', center=0,
-            vmin=-1, vmax=1, linewidths=0.5, ax=ax)
-ax.set_title('Mapa de cargas — variables × componentes')
-st.pyplot(fig)
 
 st.info("**Interpretación de componentes:**\n\n"
         "- **PC1** — Compromiso general: dominada por `age` (≈0.70) y `monthly_watch_time_mins` (≈0.64). "

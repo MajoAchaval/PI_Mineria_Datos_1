@@ -101,23 +101,20 @@ st.success(f"**Conclusión P5:** La correlación r = {corr_tickets:.3f} refuta l
 st.markdown("---")
 st.subheader("Limitaciones")
 st.warning("""
-- El dataset no incluye información sobre el contenido consumido ni la fecha de alta del usuario,
-  lo que limita el análisis de comportamiento temporal.
-- `last_login_date` conserva valores NaT sin imputar, limitando análisis de recencia.
-- Las correlaciones analizadas son lineales (Pearson); no se exploraron relaciones no lineales.
-- La independencia entre variables podría deberse en parte a la naturaleza sintética del dataset.
+- El alcance de las conclusiones está condicionado por la información disponible y por las decisiones documentadas durante el proceso de limpieza.
+- El dataset no incluye información sobre el contenido consumido ni sobre la fecha de alta del usuario, lo que restringe el análisis al perfil estático del usuario en un momento dado.
+- `last_login_date` no fue imputada por riesgo de introducir sesgo, lo que limita cualquier análisis de recencia o actividad reciente.
+- Las correlaciones analizadas son de tipo lineal (Pearson); la ausencia de correlación lineal no descarta la existencia de relaciones no lineales entre variables.
+- La naturaleza sintética del dataset limita la generalización de los resultados a datos reales de plataformas de streaming.
 """)
 
 st.markdown("---")
 st.subheader("Próximos pasos")
 st.info("""
-- Incorporar variables de contenido (títulos vistos, minutos por género) para profundizar
-  el análisis de preferencias.
-- Aplicar clustering (K-Means) sobre los componentes del PCA para segmentar perfiles de usuario.
-- Integrar datos longitudinales para analizar la evolución del comportamiento a lo largo del tiempo.
+Una mejora futura podría consistir en incorporar variables de contenido (títulos vistos y minutos por género), aplicar clustering (K-Means) sobre las componentes del PCA para segmentar perfiles de usuario, e integrar datos longitudinales para analizar la evolución del comportamiento a lo largo del tiempo.
 """)
 
 st.markdown("---")
 col1, col2 = st.columns(2)
 col1.markdown("🔗 [Repositorio GitHub](https://github.com/MajoAchaval/PI_Mineria_Datos_1)")
-col2.markdown("🌐 Aplicación en Streamlit Cloud — enlace disponible tras el deploy")
+col2.markdown("🌐 [Aplicación en Streamlit Cloud](https://pi-mineriadatos1.streamlit.app/)")

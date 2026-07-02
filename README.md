@@ -113,7 +113,7 @@ soporte). Ver `notebooks/04_pca.ipynb`.
 
 ## Visualización interactiva
 
-Aplicación pública en Streamlit Cloud: [Completar enlace]
+Aplicación pública en Streamlit Cloud: https://pi-mineriadatos1.streamlit.app/
 El repositorio se referencia en la página de inicio de la aplicación.
 
 ---
@@ -148,4 +148,4 @@ información.
 
 ---
 
-Informe final: `reports/informe_final.pdf` | Log ETL: `logs/pipeline_log.csv`
+Informe final: `reports/informe_final.pdf` | Log ETL: `logs/pipeline_log.csv` | Aplicación: https://pi-mineriadatos1.streamlit.app/
