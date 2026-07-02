@@ -1,0 +1,9 @@
+Paso,Descripción,Filas,Nulos,Retención (%)
+0,Estado original,8160,753,100.0
+1,Eliminación de duplicados,8000,753,98.04
+2,Normalización de subscription_plan,8000,786,98.04
+2,Normalización de subscription_plan,8000,786,98.04
+3,Valores imposibles,8000,1082,98.04
+4,Validar fechas,8000,1161,98.04
+6,Imputación de valores faltantes,8000,495,98.04
+7,Imputación de customer_support_tickets,8000,399,98.04
