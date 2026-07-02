@@ -1,14 +1,17 @@
 import streamlit as st
 import pandas as pd
 import json
+import os
 
 st.title("📂 Dataset")
 
 @st.cache_data
 def load_data():
-    with open('data/raw/streaming_users_dirty.json', 'r', encoding='utf-8') as f:
+    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with open(os.path.join(base, 'data/raw/streaming_users_dirty.json'), 'r', encoding='utf-8') as f:
         raw = pd.DataFrame(json.load(f))
-    clean = pd.read_csv('data/processed/streaming_users_clean.csv', parse_dates=['last_login_date'])
+    clean = pd.read_csv(os.path.join(base, 'data/processed/streaming_users_clean.csv'),
+                        parse_dates=['last_login_date'])
     return raw, clean
 
 raw, clean = load_data()
@@ -48,23 +51,26 @@ st.markdown("---")
 st.subheader("Resumen de calidad del dataset original")
 col1, col2, col3 = st.columns(3)
 col1.metric("Valores nulos", "753")
-col2.metric("Duplicados", "126")
+col2.metric("Duplicados eliminados", "160")
 col3.metric("Variantes de texto", "55+")
 
 st.write("""
 **Principales problemas detectados:**
 - Valores negativos e imposibles en `age`, `monthly_watch_time_mins` y `customer_support_tickets`
 - Múltiples variantes de texto para el mismo valor en `subscription_plan`, `country` y `favorite_genre`
-- Fechas futuras (post 2025-06-25) en `last_login_date`
-- Filas duplicadas completas
+- Fechas futuras en `last_login_date` (posteriores a la fecha de corte del dataset)
+- Filas duplicadas exactas y por `user_id`
 """)
 
 st.markdown("---")
 st.subheader("Vista previa del dataset procesado")
 st.dataframe(clean.head(50), use_container_width=True)
 
+st.markdown("---")
 st.subheader("Log de transformaciones")
 try:
-        log = pd.read_csv('logs/pipeline_log.csv')
-except:
+    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    log = pd.read_csv(os.path.join(base, 'logs/pipeline_log.csv'))
+    st.dataframe(log, use_container_width=True)
+except FileNotFoundError:
     st.info("Ejecutar el notebook 02_calidad_y_limpieza.ipynb para generar el log ETL.")

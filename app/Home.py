@@ -10,23 +10,20 @@ col1, col2 = st.columns([2, 1])
 with col1:
     st.subheader("Contexto del proyecto")
     st.write("""
-    Este proyecto analiza un dataset de usuarios de una plataforma de streaming latinoamericana.
-    El dataset contiene registros de usuarios de 7 países, con información sobre su plan de suscripción,
-    tiempo de visualización mensual, género favorito, fecha de último acceso y cantidad de tickets
-    de soporte generados.
+    Este proyecto integrador analiza un dataset de usuarios de una plataforma de streaming 
+    latinoamericana. El dataset contiene 8.160 registros de usuarios de 7 países, con información 
+    sobre su plan de suscripción, tiempo de visualización mensual, género favorito, fecha de último 
+    acceso y cantidad de tickets de soporte generados.
 
     El objetivo es explorar la estructura del dataset, realizar un proceso de limpieza documentado,
-    analizar patrones de consumo y comportamiento, y reducir dimensionalidad mediante PCA.
+    analizar patrones de consumo y comportamiento, y reducir dimensionalidad mediante PCA.      
     """)
 
-    st.subheader("Integrantes")
+    st.subheader("Información del proyecto")
     st.info("""
-    **Grupo N°:** [Completar]
-    
-    - Integrante 1: [Nombre y Apellido]
-    - Integrante 2: [Nombre y Apellido]
-    
-    **Comisión:** [Completar] | **Fecha de entrega:** [Completar]
+    **Materia:** Minería de Datos 1  
+    **Comisión:** Turno Tarde, Nodo  
+    **Autora:** Achával María José  
     """)
 
 with col2:
