@@ -80,7 +80,14 @@ st.subheader("UV-2 — Distribución del tiempo mensual de visualización")
 fig, axes = plt.subplots(1, 2, figsize=(16, 5))
 
 axes[0].hist(df_f['monthly_watch_time_mins'], bins=40, color=VIOLETA,
-             edgecolor='white', alpha=0.85, linewidth=0.5)
+             edgecolor='white', alpha=0.85, linewidth=0.5, density=True)
+
+from scipy.stats import gaussian_kde
+import numpy as np
+datos = df_f['monthly_watch_time_mins'].dropna()
+kde = gaussian_kde(datos)
+x_range = np.linspace(datos.min(), datos.max(), 300)
+axes[0].plot(x_range, kde(x_range), color='#1E1B4B', linewidth=2.5, zorder=5)
 axes[0].set_xlabel("Minutos / mes", fontsize=11)
 axes[0].set_ylabel("Cantidad de usuarios", fontsize=11)
 axes[0].set_title("Histograma", fontsize=11, color="#854545")
