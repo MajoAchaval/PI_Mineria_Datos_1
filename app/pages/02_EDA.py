@@ -53,7 +53,7 @@ st.markdown("---")
 
 # ── UV-1 ─────────────────────────────────────────────────────────────────────
 st.subheader("UV-1 — Distribución de edades")
-fig, ax = plt.subplots(figsize=(10, 4))
+fig, ax = plt.subplots(figsize=(14, 5))
 ax.hist(df_f['age'], bins=30, color=AZUL, edgecolor='white', alpha=0.85, linewidth=0.5)
 ax.axvline(df_f['age'].mean(), color='#DC2626', linestyle='--', linewidth=1.5,
            label=f"Media: {df_f['age'].mean():.1f} años")
@@ -75,7 +75,7 @@ st.markdown("---")
 
 # ── UV-2 ─────────────────────────────────────────────────────────────────────
 st.subheader("UV-2 — Distribución del tiempo mensual de visualización")
-fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+fig, axes = plt.subplots(1, 2, figsize=(16, 5))
 
 axes[0].hist(df_f['monthly_watch_time_mins'], bins=40, color=AZUL,
              edgecolor='white', alpha=0.85, linewidth=0.5)
@@ -112,7 +112,7 @@ orden = [p for p in ['Básico', 'Estándar', 'Premium'] if p in df_f['subscripti
 medias = df_f.groupby('subscription_plan')['monthly_watch_time_mins'].mean().reindex(orden)
 colores = [PALETA[p] for p in orden]
 
-fig, ax = plt.subplots(figsize=(8, 4))
+fig, ax = plt.subplots(figsize=(12, 5))
 bars = ax.bar(orden, medias, color=colores, edgecolor='white', linewidth=0.5,
               width=0.5, zorder=3)
 for bar, val in zip(bars, medias):
@@ -136,7 +136,7 @@ st.markdown("---")
 st.subheader("BV-2 — Tickets de soporte vs. tiempo de visualización")
 corr = df_f['customer_support_tickets'].corr(df_f['monthly_watch_time_mins'])
 
-fig, ax = plt.subplots(figsize=(9, 4))
+fig, ax = plt.subplots(figsize=(14, 5))
 ax.scatter(df_f['customer_support_tickets'], df_f['monthly_watch_time_mins'],
            alpha=0.25, s=14, color=AZUL, edgecolors='none', zorder=3)
 ax.set_xlabel("Tickets de soporte", fontsize=11)
@@ -156,13 +156,13 @@ st.info(f"La correlación r = {corr:.3f} es prácticamente nula, lo que indica q
 st.markdown("---")
 
 # ── MV-1 ─────────────────────────────────────────────────────────────────────
-st.subheader("MV-2 — Tiempo de visualización por país y plan de suscripción")
+st.subheader("MV-1 — Tiempo de visualización por país y plan de suscripción")
 orden_planes = [p for p in ['Básico', 'Estándar', 'Premium']
                 if p in df_f['subscription_plan'].unique()]
 pivot = (df_f.groupby(['country', 'subscription_plan'])['monthly_watch_time_mins']
          .mean().unstack().reindex(columns=orden_planes))
 
-fig, ax = plt.subplots(figsize=(12, 5))
+fig, ax = plt.subplots(figsize=(16, 6))
 x = range(len(pivot))
 width = 0.25
 for i, plan in enumerate(orden_planes):
