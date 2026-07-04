@@ -23,11 +23,13 @@ plt.rcParams.update({
     'ytick.color': '#555555',
 })
 
-AZUL     = '#2563EB'
-NARANJA  = '#F59E0B'
-VERDE    = '#10B981'
+AZUL     = '#1D4ED8'
+VIOLETA  = '#7C3AED'
+NARANJA  = '#F97316'
+VERDE    = '#059669'
+CORAL    = '#F43F5E'
 GRIS     = '#6B7280'
-PALETA   = {'Básico': '#2563EB', 'Estándar': '#F59E0B', 'Premium': '#10B981'}
+PALETA   = {'Básico': '#3B82F6', 'Estándar': '#F97316', 'Premium': '#059669'}
 
 st.title("📊 Análisis Exploratorio de Datos")
 st.caption("Explorá los patrones de comportamiento de los usuarios filtrando por país y plan.")
@@ -77,11 +79,11 @@ st.markdown("---")
 st.subheader("UV-2 — Distribución del tiempo mensual de visualización")
 fig, axes = plt.subplots(1, 2, figsize=(16, 5))
 
-axes[0].hist(df_f['monthly_watch_time_mins'], bins=40, color=AZUL,
+axes[0].hist(df_f['monthly_watch_time_mins'], bins=40, color=VIOLETA,
              edgecolor='white', alpha=0.85, linewidth=0.5)
 axes[0].set_xlabel("Minutos / mes", fontsize=11)
 axes[0].set_ylabel("Cantidad de usuarios", fontsize=11)
-axes[0].set_title("Histograma", fontsize=11, color='#333333')
+axes[0].set_title("Histograma", fontsize=11, color="#854545")
 axes[0].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'{int(x):,}'))
 
 bp = axes[1].boxplot(df_f['monthly_watch_time_mins'].dropna(), vert=False,
@@ -138,7 +140,7 @@ corr = df_f['customer_support_tickets'].corr(df_f['monthly_watch_time_mins'])
 
 fig, ax = plt.subplots(figsize=(14, 5))
 ax.scatter(df_f['customer_support_tickets'], df_f['monthly_watch_time_mins'],
-           alpha=0.25, s=14, color=AZUL, edgecolors='none', zorder=3)
+           alpha=0.35, s=16, color=CORAL, edgecolors='none', zorder=3)
 ax.set_xlabel("Tickets de soporte", fontsize=11)
 ax.set_ylabel("Minutos / mes", fontsize=11)
 ax.text(0.97, 0.95, f'r = {corr:.3f}', transform=ax.transAxes, fontsize=11,
