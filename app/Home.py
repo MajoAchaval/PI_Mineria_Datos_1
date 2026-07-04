@@ -35,4 +35,4 @@ with col2:
     st.metric("Planes de suscripción", "3")
 
 st.markdown("---")
-st.markdown("🔗 [Repositorio GitHub](https://github.com/[usuario]/PI_Mineria_Datos_1) &nbsp;|&nbsp; 📓 Notebooks disponibles en `/notebooks/`")
+st.markdown("🔗 [Repositorio GitHub](https://github.com/MajoAchaval/PI_Mineria_Datos_1) &nbsp;|&nbsp; 📓 Notebooks disponibles en `/notebooks/`")
