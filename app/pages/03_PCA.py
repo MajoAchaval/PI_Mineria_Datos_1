@@ -171,12 +171,14 @@ st.markdown("---")
 st.subheader("Cargas (loadings) por componente")
 st.dataframe(loadings.round(4), use_container_width=True)
 
-st.info("**PC1 — Compromiso general:** dominada por edad y consumo mensual. "
-        "Usuarios con valores altos son mayores y con alto consumo.\n\n"
-        "**PC2 — Contraste edad-consumo:** diferencia usuarios jóvenes de alto consumo "
-        "vs. mayores de bajo consumo.\n\n"
-        "**PC3 — Interacción con soporte:** dominada casi exclusivamente por tickets de soporte.")
-
+st.info("**PC1 — Perfil de usuario activo general:** las tres variables contribuyen "
+        "de forma similar (age: 0.646, watch_time: 0.554, tickets: 0.525). "
+        "Usuarios con valores altos tienen mayor edad, mayor consumo y más tickets.\n\n"
+        "**PC2 — Tickets vs. consumo:** contrapone tickets de soporte (0.749) "
+        "y tiempo de visualización (-0.661). Diferencia usuarios con muchos tickets "
+        "y bajo consumo de usuarios con alto consumo y pocos tickets.\n\n"
+        "**PC3 — Edad vs. actividad:** dominada por age (0.762). Diferencia usuarios "
+        "mayores con bajo consumo de usuarios jóvenes con alto consumo y más tickets.")
 st.markdown("---")
 st.subheader("Conclusión")
 st.success("El PCA confirma que las tres variables miden dimensiones independientes del usuario. "
