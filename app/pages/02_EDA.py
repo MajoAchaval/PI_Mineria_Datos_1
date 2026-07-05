@@ -53,7 +53,7 @@ st.sidebar.metric("Registros filtrados", f"{len(df_f):,}")
 st.markdown("---")
 
 # ── UV-1 ─────────────────────────────────────────────────────────────────────
-st.subheader("UV-1 — Distribución de edades")
+st.subheader("Distribución de edades")
 
 media_age = df_f['age'].mean()
 mediana_age = df_f['age'].median()
@@ -85,7 +85,7 @@ st.info(f"La distribución de edades se concentra entre los 25 y 45 años, con m
 st.markdown("---")
 
 # ── UV-2 ─────────────────────────────────────────────────────────────────────
-st.subheader("UV-2 — Distribución por género favorito")
+st.subheader("Distribución por género favorito")
 
 generos = df_f['favorite_genre'].value_counts().reset_index()
 generos.columns = ['Género', 'Usuarios']
@@ -118,7 +118,7 @@ st.info("Drama, Acción y Comedia concentran las preferencias de contenido en la
 st.markdown("---")
 
 # ── BV-1 ─────────────────────────────────────────────────────────────────────
-st.subheader("BV-1 — Tiempo de visualización por plan de suscripción")
+st.subheader("Tiempo de visualización por plan de suscripción")
 
 orden = [p for p in ['Básico', 'Estándar', 'Premium']
          if p in df_f['subscription_plan'].unique()]
@@ -151,7 +151,7 @@ st.info("Los usuarios Premium consumen casi el doble que los usuarios Básicos "
 st.markdown("---")
 
 # ── BV-2 ─────────────────────────────────────────────────────────────────────
-st.subheader("BV-2 — Tickets de soporte vs. tiempo de visualización")
+st.subheader("Tickets de soporte vs. tiempo de visualización")
 
 corr = df_f['customer_support_tickets'].corr(df_f['monthly_watch_time_mins'])
 avg_by_ticket = (df_f.groupby('customer_support_tickets')['monthly_watch_time_mins']
@@ -191,7 +191,7 @@ st.info(f"La correlación r = {corr:.3f} es prácticamente nula. El consumo se m
 st.markdown("---")
 
 # ── MV-1 ─────────────────────────────────────────────────────────────────────
-st.subheader("MV-1 — Tiempo de visualización por país y plan de suscripción")
+st.subheader("Tiempo de visualización por país y plan de suscripción")
 
 orden_planes = [p for p in ['Básico', 'Estándar', 'Premium']
                 if p in df_f['subscription_plan'].unique()]
