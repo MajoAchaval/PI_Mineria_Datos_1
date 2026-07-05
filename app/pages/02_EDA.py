@@ -202,11 +202,12 @@ fig.update_layout(**base_layout(height=480),
                   barmode='group',
                   xaxis_title='País',
                   yaxis_title='Minutos promedio / mes',
-                  yaxis=dict(showgrid=True, gridcolor='#F3F4F6'),
+                  showlegend=True,
                   legend=dict(title='Plan', orientation='h',
                               yanchor='bottom', y=1.02,
                               xanchor='right', x=1,
                               font=dict(size=12)))
+fig.update_yaxes(showgrid=True, gridcolor='#F3F4F6')
 st.plotly_chart(fig, use_container_width=True)
 st.info("El patrón Premium > Estándar > Básico se mantiene consistente en todos los países, "
         "lo que indica que la relación entre plan y consumo no varía por mercado geográfico.")
