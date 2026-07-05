@@ -32,7 +32,14 @@ def base_layout(height=420):
                         font=dict(size=12, color='#374151')),
     )
 
-LAYOUT = base_layout()
+LAYOUT = dict(
+    plot_bgcolor='white',
+    paper_bgcolor='white',
+    font=dict(family='Inter, sans-serif', size=12, color='#374151'),
+    margin=dict(t=50, b=50, l=50, r=30),
+    hoverlabel=dict(bgcolor='white', bordercolor='#E5E7EB',
+                    font=dict(size=12, color='#374151')),
+)
 
 # Filtros
 st.sidebar.header("🔧 Filtros")
