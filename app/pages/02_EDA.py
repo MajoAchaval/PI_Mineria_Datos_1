@@ -99,13 +99,10 @@ fig.add_trace(go.Bar(
     textfont=dict(size=11, color='#374151'),
     hovertemplate='%{y}: %{x:,} usuarios<extra></extra>',
 ))
-fig.update_layout(**LAYOUT,
-                  height=420,
-                  xaxis=dict(showgrid=True, gridcolor='#F3F4F6',
-                             linecolor='#E5E7EB', title='Cantidad de usuarios'),
-                  yaxis=dict(showgrid=False, linecolor='#E5E7EB',
-                             autorange='reversed'),
-                  showlegend=False)
+fig.update_layout(**LAYOUT, height=420, showlegend=False)
+fig.update_xaxes(showgrid=True, gridcolor='#F3F4F6',
+                 linecolor='#E5E7EB', title='Cantidad de usuarios')
+fig.update_yaxes(showgrid=False, linecolor='#E5E7EB', autorange='reversed')
 st.plotly_chart(fig, use_container_width=True)
 st.info("Drama, Acción y Comedia concentran las preferencias de contenido en la plataforma. "
         "Esta distribución es consistente en todos los países analizados y orienta "
