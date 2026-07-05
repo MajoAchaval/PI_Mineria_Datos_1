@@ -32,6 +32,8 @@ def base_layout(height=420):
                         font=dict(size=12, color='#374151')),
     )
 
+LAYOUT = base_layout()
+
 # Filtros
 st.sidebar.header("🔧 Filtros")
 paises = st.sidebar.multiselect("País", sorted(df['country'].dropna().unique()),
@@ -76,34 +78,38 @@ st.info(f"La distribución de edades se concentra entre los 25 y 45 años, con m
 st.markdown("---")
 
 # ── UV-2 ─────────────────────────────────────────────────────────────────────
-st.subheader("UV-2 — Distribución del tiempo mensual de visualización")
+st.subheader("UV-2 — Distribución por género favorito")
 
-media_w = df_f['monthly_watch_time_mins'].mean()
-mediana_w = df_f['monthly_watch_time_mins'].median()
+generos = df_f['favorite_genre'].value_counts().reset_index()
+generos.columns = ['Género', 'Usuarios']
+generos['Porcentaje'] = (generos['Usuarios'] / len(df_f) * 100).round(1)
 
 fig = go.Figure()
-fig.add_trace(go.Histogram(
-    x=df_f['monthly_watch_time_mins'], nbinsx=40,
-    marker=dict(color='#8B5CF6', line=dict(color='white', width=0.8)),
-    opacity=0.9, name='Usuarios',
-    hovertemplate='Minutos: %{x}<br>Usuarios: %{y}<extra></extra>'
+fig.add_trace(go.Bar(
+    x=generos['Usuarios'],
+    y=generos['Género'],
+    orientation='h',
+    marker=dict(
+        color=generos['Usuarios'],
+        colorscale=[[0, '#C4B5FD'], [1, '#6366F1']],
+        line=dict(color='white', width=0)
+    ),
+    text=[f"{p}%" for p in generos['Porcentaje']],
+    textposition='outside',
+    textfont=dict(size=11, color='#374151'),
+    hovertemplate='%{y}: %{x:,} usuarios<extra></extra>',
 ))
-fig.add_vline(x=media_w, line_dash='dash', line_color='#EF4444', line_width=2,
-              annotation_text=f"Media: {media_w:.0f} min",
-              annotation_position='top right',
-              annotation=dict(font=dict(color='#EF4444', size=11)))
-fig.add_vline(x=mediana_w, line_dash='dot', line_color='#F59E0B', line_width=2,
-              annotation_text=f"Mediana: {mediana_w:.0f} min",
-              annotation_position='top left',
-              annotation=dict(font=dict(color='#F59E0B', size=11)))
-fig.update_layout(**base_layout(),
-                  xaxis_title='Minutos / mes',
-                  yaxis_title='Cantidad de usuarios',
+fig.update_layout(**LAYOUT,
+                  height=420,
+                  xaxis=dict(showgrid=True, gridcolor='#F3F4F6',
+                             linecolor='#E5E7EB', title='Cantidad de usuarios'),
+                  yaxis=dict(showgrid=False, linecolor='#E5E7EB',
+                             autorange='reversed'),
                   showlegend=False)
 st.plotly_chart(fig, use_container_width=True)
-st.info(f"El tiempo de visualización presenta una distribución asimétrica a la derecha, "
-        f"con media ≈ {media_w:.0f} min/mes y mediana ≈ {mediana_w:.0f} min/mes. "
-        "Los valores extremos fueron acotados durante la limpieza mediante winsorización.")
+st.info("Drama, Acción y Comedia concentran las preferencias de contenido en la plataforma. "
+        "Esta distribución es consistente en todos los países analizados y orienta "
+        "la política de catálogo hacia estos tres géneros prioritarios.")
 
 st.markdown("---")
 
