@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from pathlib import Path
 
 st.title("📊 Análisis Exploratorio de Datos")
@@ -14,16 +15,22 @@ def load_data():
 
 df = load_data()
 
-PALETA = {'Básico': '#3B82F6', 'Estándar': '#F97316', 'Premium': '#059669'}
+PALETA = {'Básico': '#6366F1', 'Estándar': '#F59E0B', 'Premium': '#10B981'}
 
-LAYOUT = dict(
-    plot_bgcolor='white',
-    paper_bgcolor='white',
-    font=dict(family='sans-serif', color='#333333'),
-    xaxis=dict(showgrid=True, gridcolor='#F0F0F0', linecolor='#E5E7EB'),
-    yaxis=dict(showgrid=True, gridcolor='#F0F0F0', linecolor='#E5E7EB'),
-    margin=dict(t=40, b=40, l=40, r=40),
-)
+def base_layout(height=420):
+    return dict(
+        height=height,
+        plot_bgcolor='white',
+        paper_bgcolor='white',
+        font=dict(family='Inter, sans-serif', size=12, color='#374151'),
+        margin=dict(t=50, b=50, l=50, r=30),
+        xaxis=dict(showgrid=False, linecolor='#E5E7EB', linewidth=1,
+                   tickfont=dict(size=11)),
+        yaxis=dict(showgrid=True, gridcolor='#F3F4F6', linecolor='#E5E7EB',
+                   linewidth=1, tickfont=dict(size=11)),
+        hoverlabel=dict(bgcolor='white', bordercolor='#E5E7EB',
+                        font=dict(size=12, color='#374151')),
+    )
 
 # Filtros
 st.sidebar.header("🔧 Filtros")
@@ -38,92 +45,137 @@ st.markdown("---")
 
 # ── UV-1 ─────────────────────────────────────────────────────────────────────
 st.subheader("UV-1 — Distribución de edades")
-fig = px.histogram(df_f, x='age', nbins=30,
-                   marginal='violin',
-                   opacity=0.85,
-                   color_discrete_sequence=['#3B82F6'],
-                   labels={'age': 'Edad', 'count': 'Usuarios'})
-fig.add_vline(x=df_f['age'].mean(), line_dash='dash', line_color='#DC2626',
-              annotation_text=f"Media: {df_f['age'].mean():.1f}",
-              annotation_position='top right')
-fig.add_vline(x=df_f['age'].median(), line_dash='dash', line_color='#F97316',
-              annotation_text=f"Mediana: {df_f['age'].median():.1f}",
-              annotation_position='top left')
-fig.update_traces(marker_line_width=0)
-fig.update_layout(showlegend=False, height=420,
-                  yaxis_title='Usuarios', **LAYOUT)
+
+media_age = df_f['age'].mean()
+mediana_age = df_f['age'].median()
+
+fig = go.Figure()
+fig.add_trace(go.Histogram(
+    x=df_f['age'], nbinsx=30,
+    marker=dict(color='#6366F1', line=dict(color='white', width=0.8)),
+    opacity=0.9, name='Usuarios', hovertemplate='Edad: %{x}<br>Usuarios: %{y}<extra></extra>'
+))
+fig.add_vline(x=media_age, line_dash='dash', line_color='#EF4444', line_width=2,
+              annotation_text=f"Media: {media_age:.1f} años",
+              annotation_position='top right',
+              annotation=dict(font=dict(color='#EF4444', size=11)))
+fig.add_vline(x=mediana_age, line_dash='dot', line_color='#F59E0B', line_width=2,
+              annotation_text=f"Mediana: {mediana_age:.1f} años",
+              annotation_position='top left',
+              annotation=dict(font=dict(color='#F59E0B', size=11)))
+fig.update_layout(**base_layout(),
+                  xaxis_title='Edad',
+                  yaxis_title='Cantidad de usuarios',
+                  showlegend=False)
 st.plotly_chart(fig, use_container_width=True)
 st.info(f"La distribución de edades se concentra entre los 25 y 45 años, con media "
-        f"{df_f['age'].mean():.1f} y mediana {df_f['age'].median():.1f}. "
-        "La proximidad entre ambos valores indica una distribución aproximadamente simétrica.")
+        f"{media_age:.1f} y mediana {mediana_age:.1f}. "
+        "La distribución es aproximadamente simétrica, sin sesgo marcado hacia "
+        "usuarios muy jóvenes o muy mayores.")
 
 st.markdown("---")
 
 # ── UV-2 ─────────────────────────────────────────────────────────────────────
 st.subheader("UV-2 — Distribución del tiempo mensual de visualización")
-fig = px.histogram(df_f, x='monthly_watch_time_mins', nbins=40,
-                   marginal='box',
-                   opacity=0.85,
-                   color_discrete_sequence=['#7C3AED'],
-                   labels={'monthly_watch_time_mins': 'Minutos / mes', 'count': 'Usuarios'})
-fig.add_vline(x=df_f['monthly_watch_time_mins'].mean(), line_dash='dash',
-              line_color='#DC2626',
-              annotation_text=f"Media: {df_f['monthly_watch_time_mins'].mean():.0f} min",
-              annotation_position='top right')
-fig.add_vline(x=df_f['monthly_watch_time_mins'].median(), line_dash='dash',
-              line_color='#F97316',
-              annotation_text=f"Mediana: {df_f['monthly_watch_time_mins'].median():.0f} min",
-              annotation_position='top left')
-fig.update_traces(marker_line_width=0)
-fig.update_layout(showlegend=False, height=420,
-                  yaxis_title='Usuarios', **LAYOUT)
+
+media_w = df_f['monthly_watch_time_mins'].mean()
+mediana_w = df_f['monthly_watch_time_mins'].median()
+
+fig = go.Figure()
+fig.add_trace(go.Histogram(
+    x=df_f['monthly_watch_time_mins'], nbinsx=40,
+    marker=dict(color='#8B5CF6', line=dict(color='white', width=0.8)),
+    opacity=0.9, name='Usuarios',
+    hovertemplate='Minutos: %{x}<br>Usuarios: %{y}<extra></extra>'
+))
+fig.add_vline(x=media_w, line_dash='dash', line_color='#EF4444', line_width=2,
+              annotation_text=f"Media: {media_w:.0f} min",
+              annotation_position='top right',
+              annotation=dict(font=dict(color='#EF4444', size=11)))
+fig.add_vline(x=mediana_w, line_dash='dot', line_color='#F59E0B', line_width=2,
+              annotation_text=f"Mediana: {mediana_w:.0f} min",
+              annotation_position='top left',
+              annotation=dict(font=dict(color='#F59E0B', size=11)))
+fig.update_layout(**base_layout(),
+                  xaxis_title='Minutos / mes',
+                  yaxis_title='Cantidad de usuarios',
+                  showlegend=False)
 st.plotly_chart(fig, use_container_width=True)
 st.info(f"El tiempo de visualización presenta una distribución asimétrica a la derecha, "
-        f"con media ≈ {df_f['monthly_watch_time_mins'].mean():.0f} min/mes y "
-        f"mediana ≈ {df_f['monthly_watch_time_mins'].median():.0f} min/mes.")
+        f"con media ≈ {media_w:.0f} min/mes y mediana ≈ {mediana_w:.0f} min/mes. "
+        "Los valores extremos fueron acotados durante la limpieza mediante winsorización.")
 
 st.markdown("---")
 
 # ── BV-1 ─────────────────────────────────────────────────────────────────────
 st.subheader("BV-1 — Tiempo de visualización por plan de suscripción")
+
 orden = [p for p in ['Básico', 'Estándar', 'Premium']
          if p in df_f['subscription_plan'].unique()]
 medias = (df_f.groupby('subscription_plan')['monthly_watch_time_mins']
           .mean().reindex(orden).reset_index())
-medias.columns = ['Plan', 'Minutos promedio']
+medias.columns = ['Plan', 'Minutos']
 
-fig = px.bar(medias, x='Plan', y='Minutos promedio',
-             color='Plan', color_discrete_map=PALETA,
-             text='Minutos promedio',
-             labels={'Minutos promedio': 'Minutos promedio / mes'})
-fig.update_traces(texttemplate='%{text:.0f} min', textposition='outside',
-                  marker_line_width=0)
-fig.update_layout(showlegend=False, height=420,
-                  xaxis=dict(showgrid=False),
-                  yaxis=dict(showgrid=True, gridcolor='#F0F0F0'),
-                  **{k: v for k, v in LAYOUT.items() if k not in ['xaxis', 'yaxis']})
+fig = go.Figure()
+for _, row in medias.iterrows():
+    fig.add_trace(go.Bar(
+        x=[row['Plan']], y=[row['Minutos']],
+        marker=dict(color=PALETA[row['Plan']], line=dict(color='white', width=0)),
+        text=f"{row['Minutos']:.0f} min",
+        textposition='outside',
+        textfont=dict(size=13, color='#374151'),
+        name=row['Plan'],
+        hovertemplate=f"{row['Plan']}: {row['Minutos']:.0f} min/mes<extra></extra>",
+        width=0.45
+    ))
+fig.update_layout(**base_layout(),
+                  xaxis_title='Plan de suscripción',
+                  yaxis_title='Minutos promedio / mes',
+                  yaxis=dict(range=[0, medias['Minutos'].max() * 1.2],
+                             showgrid=True, gridcolor='#F3F4F6'),
+                  showlegend=False)
 st.plotly_chart(fig, use_container_width=True)
 st.info("Los usuarios Premium consumen casi el doble que los usuarios Básicos "
         "(≈1.123 vs. ≈587 min/mes). El plan de suscripción es el principal "
-        "diferenciador del nivel de consumo.")
+        "diferenciador del nivel de consumo en la plataforma.")
 
 st.markdown("---")
 
 # ── BV-2 ─────────────────────────────────────────────────────────────────────
 st.subheader("BV-2 — Tickets de soporte vs. tiempo de visualización")
+
 corr = df_f['customer_support_tickets'].corr(df_f['monthly_watch_time_mins'])
-fig = px.scatter(df_f, x='customer_support_tickets', y='monthly_watch_time_mins',
-                 opacity=0.35,
-                 color_discrete_sequence=['#F43F5E'],
-                 trendline='ols',
-                 labels={'customer_support_tickets': 'Tickets de soporte',
-                         'monthly_watch_time_mins': 'Minutos / mes'})
-fig.update_traces(marker=dict(size=5), selector=dict(mode='markers'))
-fig.update_layout(height=420, **LAYOUT)
-fig.add_annotation(x=0.97, y=0.97, xref='paper', yref='paper',
-                   text=f'r = {corr:.3f}', showarrow=False,
-                   bgcolor='white', bordercolor='#D1D5DB',
-                   font=dict(size=13))
+avg_by_ticket = (df_f.groupby('customer_support_tickets')['monthly_watch_time_mins']
+                 .mean().reset_index())
+avg_by_ticket.columns = ['Tickets', 'Promedio']
+
+fig = go.Figure()
+fig.add_trace(go.Bar(
+    x=avg_by_ticket['Tickets'], y=avg_by_ticket['Promedio'],
+    marker=dict(color='#F43F5E', line=dict(color='white', width=0)),
+    text=avg_by_ticket['Promedio'].round(0),
+    textposition='outside',
+    textfont=dict(size=11, color='#374151'),
+    hovertemplate='Tickets: %{x}<br>Promedio: %{y:.0f} min/mes<extra></extra>',
+    width=0.6
+))
+fig.add_hline(y=df_f['monthly_watch_time_mins'].mean(),
+              line_dash='dash', line_color='#6366F1', line_width=1.5,
+              annotation_text=f"Media global: {df_f['monthly_watch_time_mins'].mean():.0f} min",
+              annotation_position='top right',
+              annotation=dict(font=dict(color='#6366F1', size=11)))
+fig.update_layout(**base_layout(),
+                  xaxis_title='Cantidad de tickets de soporte',
+                  yaxis_title='Minutos promedio / mes',
+                  yaxis=dict(range=[0, avg_by_ticket['Promedio'].max() * 1.2],
+                             showgrid=True, gridcolor='#F3F4F6'),
+                  showlegend=False)
+fig.add_annotation(x=0.97, y=0.05, xref='paper', yref='paper',
+                   text=f'Correlación r = {corr:.3f}',
+                   showarrow=False,
+                   bgcolor='#FEF3C7', bordercolor='#F59E0B',
+                   borderwidth=1, borderpad=6,
+                   font=dict(size=12, color='#92400E'))
 st.plotly_chart(fig, use_container_width=True)
 st.info(f"La correlación r = {corr:.3f} es prácticamente nula. El consumo se mantiene "
         "estable independientemente de la cantidad de tickets de soporte generados.")
@@ -132,24 +184,31 @@ st.markdown("---")
 
 # ── MV-1 ─────────────────────────────────────────────────────────────────────
 st.subheader("MV-1 — Tiempo de visualización por país y plan de suscripción")
+
 orden_planes = [p for p in ['Básico', 'Estándar', 'Premium']
                 if p in df_f['subscription_plan'].unique()]
 mv1 = (df_f.groupby(['country', 'subscription_plan'])['monthly_watch_time_mins']
        .mean().round(0).reset_index())
-mv1.columns = ['País', 'Plan', 'Minutos promedio']
+mv1.columns = ['País', 'Plan', 'Minutos']
 
-fig = px.bar(mv1, x='País', y='Minutos promedio', color='Plan',
-             color_discrete_map=PALETA, barmode='group',
-             labels={'Minutos promedio': 'Minutos promedio / mes'},
-             category_orders={'Plan': orden_planes})
-fig.update_traces(marker_line_width=0)
-fig.update_layout(height=480,
-                  xaxis=dict(showgrid=False),
-                  yaxis=dict(showgrid=True, gridcolor='#F0F0F0'),
+fig = go.Figure()
+for plan in orden_planes:
+    datos = mv1[mv1['Plan'] == plan]
+    fig.add_trace(go.Bar(
+        x=datos['País'], y=datos['Minutos'],
+        name=plan,
+        marker=dict(color=PALETA[plan], line=dict(color='white', width=0)),
+        hovertemplate=f'{plan}: %{{y:.0f}} min/mes<extra></extra>',
+    ))
+fig.update_layout(**base_layout(height=480),
+                  barmode='group',
+                  xaxis_title='País',
+                  yaxis_title='Minutos promedio / mes',
+                  yaxis=dict(showgrid=True, gridcolor='#F3F4F6'),
                   legend=dict(title='Plan', orientation='h',
                               yanchor='bottom', y=1.02,
-                              xanchor='right', x=1),
-                  **{k: v for k, v in LAYOUT.items() if k not in ['xaxis', 'yaxis']})
+                              xanchor='right', x=1,
+                              font=dict(size=12)))
 st.plotly_chart(fig, use_container_width=True)
 st.info("El patrón Premium > Estándar > Básico se mantiene consistente en todos los países, "
         "lo que indica que la relación entre plan y consumo no varía por mercado geográfico.")
