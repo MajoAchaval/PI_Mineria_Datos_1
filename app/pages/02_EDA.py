@@ -131,9 +131,8 @@ for _, row in medias.iterrows():
 fig.update_layout(**base_layout(),
                   xaxis_title='Plan de suscripción',
                   yaxis_title='Minutos promedio / mes',
-                  yaxis=dict(range=[0, medias['Minutos'].max() * 1.2],
-                             showgrid=True, gridcolor='#F3F4F6'),
                   showlegend=False)
+fig.update_yaxes(range=[0, medias['Minutos'].max() * 1.2])
 st.plotly_chart(fig, use_container_width=True)
 st.info("Los usuarios Premium consumen casi el doble que los usuarios Básicos "
         "(≈1.123 vs. ≈587 min/mes). El plan de suscripción es el principal "
@@ -167,9 +166,8 @@ fig.add_hline(y=df_f['monthly_watch_time_mins'].mean(),
 fig.update_layout(**base_layout(),
                   xaxis_title='Cantidad de tickets de soporte',
                   yaxis_title='Minutos promedio / mes',
-                  yaxis=dict(range=[0, avg_by_ticket['Promedio'].max() * 1.2],
-                             showgrid=True, gridcolor='#F3F4F6'),
                   showlegend=False)
+fig.update_yaxes(range=[0, avg_by_ticket['Promedio'].max() * 1.2])
 fig.add_annotation(x=0.97, y=0.05, xref='paper', yref='paper',
                    text=f'Correlación r = {corr:.3f}',
                    showarrow=False,
