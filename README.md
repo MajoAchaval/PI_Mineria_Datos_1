@@ -82,13 +82,15 @@ con la mediana agrupada por `subscription_plan` (mecanismo diagnosticado como MA
 ## Resumen del análisis exploratorio
 
 El EDA se desarrolla en `notebooks/03_eda.ipynb` y se presenta en la aplicación Streamlit
-(página EDA). Se analizaron 5 visualizaciones: distribución de edades (UV-1) — concentrada
-entre 25 y 45 años, media 33.6 / mediana 33.0 —, distribución del tiempo de visualización
-(UV-2) — asimétrica a la derecha, media ≈790 min/mes, mediana ≈771 min/mes —, tiempo promedio
-por plan de suscripción (BV-1) — Premium (≈1.123 min) > Estándar (≈862 min) > Básico (≈587 min),
-confirmando la hipótesis de mayor consumo en planes superiores —, relación entre tickets de
-soporte y tiempo de visualización (BV-2) — sin tendencia clara, consumo estable en ≈700-800
-min/mes salvo el grupo con 5 tickets (≈1.029 min) —,y tiempo de visualización por país y plan de suscripción (MV-1) — el patrón Premium > Estándar > Básico se mantiene consistente en los 7 países analizados, sin variación significativa por mercado geográfico.
+(página EDA). Se analizaron 5 visualizaciones: distribución de edades — concentrada
+entre 25 y 45 años, media 33.6 / mediana 33.0 —, distribución por género favorito — Drama,
+Acción y Comedia concentran las preferencias de contenido en los 7 países analizados —,
+tiempo promedio por plan de suscripción — Premium (≈1.123 min) > Estándar (≈862 min) >
+Básico (≈587 min), confirmando la hipótesis de mayor consumo en planes superiores —,
+relación entre tickets de soporte y tiempo de visualización — sin tendencia clara,
+correlación r ≈ 0.003 —, y tiempo de visualización por país y plan de suscripción —
+el patrón Premium > Estándar > Básico se mantiene consistente en los 7 países analizados,
+sin variación significativa por mercado geográfico.
 
 ---
 
