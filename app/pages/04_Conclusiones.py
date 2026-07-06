@@ -62,6 +62,28 @@ st.success("El perfil etario dominante es el adulto joven. No hay sesgo marcado 
 st.markdown("---")
 
 # ── HALLAZGO 3 ───────────────────────────────────────────────────────────────
+st.subheader("🌍 Cobertura regional equilibrada")
+st.write("Los 7 países latinoamericanos tienen una representación similar en la plataforma.")
+
+col1, col2 = st.columns(2)
+with col1:
+    pais = df['country'].value_counts().reset_index()
+    pais.columns = ['País', 'Usuarios']
+    pais['Porcentaje'] = (pais['Usuarios'] / len(df) * 100).round(1).astype(str) + '%'
+    st.dataframe(pais, use_container_width=True, hide_index=True)
+with col2:
+    gen = df['favorite_genre'].value_counts().head(3).reset_index()
+    gen.columns = ['Género', 'Usuarios']
+    st.write("**Top 3 géneros favoritos:**")
+    for _, row in gen.iterrows():
+        pct = row['Usuarios'] / len(df) * 100
+        st.metric(row['Género'], f"{row['Usuarios']:,} usuarios", f"{pct:.1f}% del total")
+st.success("No existe un mercado dominante. Drama, Acción y Comedia concentran "
+           "las preferencias de contenido en toda la región.")
+
+st.markdown("---")
+
+# ── HALLAZGO 4 ───────────────────────────────────────────────────────────────
 st.subheader("🎫 Más tickets de soporte no significa menos consumo")
 st.write("Contra lo esperado, los usuarios que contactan más al soporte técnico "
          "no consumen menos contenido.")
@@ -85,7 +107,7 @@ st.success("Los tickets de soporte no son un indicador confiable de insatisfacci
 
 st.markdown("---")
 
-# ── HALLAZGO 4 ───────────────────────────────────────────────────────────────
+# ── HALLAZGO 5 ───────────────────────────────────────────────────────────────
 st.subheader("🔬 Cada variable describe una dimensión distinta del usuario")
 st.write("El análisis estadístico confirmó que la edad, el consumo y los tickets "
          "de soporte son aspectos **independientes** entre sí.")
