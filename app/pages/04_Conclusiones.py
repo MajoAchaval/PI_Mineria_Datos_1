@@ -47,24 +47,17 @@ st.success("El plan de suscripción es el factor que mejor explica el nivel de c
 st.markdown("---")
 
 # ── HALLAZGO 2 ───────────────────────────────────────────────────────────────
-st.subheader("🌍 Cobertura regional equilibrada")
-st.write("Los 7 países latinoamericanos tienen una representación similar en la plataforma.")
+st.subheader("👤 La plataforma tiene una base de usuarios adulta joven")
+st.write("La mayoría de los usuarios tiene entre **25 y 45 años**, "
+         "con una distribución aproximadamente simétrica.")
 
-col1, col2 = st.columns(2)
-with col1:
-    pais = df['country'].value_counts().reset_index()
-    pais.columns = ['País', 'Usuarios']
-    pais['Porcentaje'] = (pais['Usuarios'] / len(df) * 100).round(1).astype(str) + '%'
-    st.dataframe(pais, use_container_width=True, hide_index=True)
-with col2:
-    gen = df['favorite_genre'].value_counts().head(3).reset_index()
-    gen.columns = ['Género', 'Usuarios']
-    st.write("**Top 3 géneros favoritos:**")
-    for _, row in gen.iterrows():
-        pct = row['Usuarios'] / len(df) * 100
-        st.metric(row['Género'], f"{row['Usuarios']:,} usuarios", f"{pct:.1f}% del total")
-st.success("No existe un mercado dominante. Drama, Acción y Comedia concentran "
-           "las preferencias de contenido en toda la región.")
+col1, col2, col3 = st.columns(3)
+col1.metric("Edad promedio", f"{df['age'].mean():.1f} años")
+col2.metric("Edad mediana", f"{df['age'].median():.1f} años")
+col3.metric("Rango principal", "25 — 45 años")
+
+st.success("El perfil etario dominante es el adulto joven. No hay sesgo marcado "
+           "hacia usuarios muy jóvenes ni muy mayores.")
 
 st.markdown("---")
 
