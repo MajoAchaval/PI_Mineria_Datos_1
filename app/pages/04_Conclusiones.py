@@ -4,19 +4,19 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
-import os
+from pathlib import Path
 
 st.title("📝 Conclusiones")
+st.caption("Hallazgos principales del análisis de usuarios de la plataforma de streaming.")
 
 @st.cache_data
 def load_data():
-    base = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
-    return pd.read_csv(os.path.join(base, 'data/processed/streaming_users_clean.csv'),
+    base = Path(__file__).resolve().parents[2]
+    return pd.read_csv(base / 'data/processed/streaming_users_clean.csv',
                        parse_dates=['last_login_date'])
 
 df = load_data()
 
-# Calcular valores reales
 orden = ['Básico', 'Estándar', 'Premium']
 medias = df.groupby('subscription_plan')['monthly_watch_time_mins'].mean().reindex(orden)
 corr_tickets = df['customer_support_tickets'].corr(df['monthly_watch_time_mins'])
@@ -27,92 +27,111 @@ X_imp = SimpleImputer(strategy='mean').fit_transform(
 pca = PCA()
 pca.fit(X_imp)
 varianza = pca.explained_variance_ratio_
-varianza_acum = np.cumsum(varianza)
-n_80 = np.argmax(varianza_acum >= 0.80) + 1
-
-st.subheader("Respuesta a las preguntas de análisis")
-
-# P1
-st.markdown("### P1 — ¿Existe relación entre el plan de suscripción y el tiempo de visualización?")
-col1, col2, col3 = st.columns(3)
-col1.metric("Básico", f"{medias['Básico']:.0f} min/mes")
-col2.metric("Estándar", f"{medias['Estándar']:.0f} min/mes")
-col3.metric("Premium", f"{medias['Premium']:.0f} min/mes")
-st.success(f"**Conclusión P1:** Sí existe una relación positiva y gradual. Los usuarios Premium "
-           f"consumen casi el doble que los Básicos (≈{medias['Premium']:.0f} vs. "
-           f"≈{medias['Básico']:.0f} min/mes), una diferencia de "
-           f"≈{medias['Premium']-medias['Básico']:.0f} minutos mensuales. "
-           "El plan es el principal diferenciador del nivel de consumo.")
 
 st.markdown("---")
 
-# P2
-st.markdown("### P2 — ¿Cuál es la distribución de usuarios por país y género?")
+# ── HALLAZGO 1 ───────────────────────────────────────────────────────────────
+st.subheader("🏆 El plan define cuánto consume cada usuario")
+st.write("Los usuarios Premium ven casi el **doble** de contenido que los usuarios Básicos cada mes.")
+
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("👤 Básico", f"{medias['Básico']:.0f} min/mes")
+col2.metric("👤 Estándar", f"{medias['Estándar']:.0f} min/mes")
+col3.metric("👤 Premium", f"{medias['Premium']:.0f} min/mes")
+col4.metric("📈 Diferencia",
+            f"+{medias['Premium']-medias['Básico']:.0f} min/mes",
+            delta_color="normal")
+st.success("El plan de suscripción es el factor que mejor explica el nivel de consumo, "
+           "y este patrón se repite de forma consistente en los 7 países analizados.")
+
+st.markdown("---")
+
+# ── HALLAZGO 2 ───────────────────────────────────────────────────────────────
+st.subheader("🌍 Cobertura regional equilibrada")
+st.write("Los 7 países latinoamericanos tienen una representación similar en la plataforma.")
+
 col1, col2 = st.columns(2)
 with col1:
-    st.write("**Por país:**")
     pais = df['country'].value_counts().reset_index()
     pais.columns = ['País', 'Usuarios']
-    pais['%'] = (pais['Usuarios'] / len(df) * 100).round(1)
+    pais['Porcentaje'] = (pais['Usuarios'] / len(df) * 100).round(1).astype(str) + '%'
     st.dataframe(pais, use_container_width=True, hide_index=True)
 with col2:
-    st.write("**Por género favorito:**")
-    gen = df['favorite_genre'].value_counts().reset_index()
+    gen = df['favorite_genre'].value_counts().head(3).reset_index()
     gen.columns = ['Género', 'Usuarios']
-    gen['%'] = (gen['Usuarios'] / len(df) * 100).round(1)
-    st.dataframe(gen, use_container_width=True, hide_index=True)
-st.success("**Conclusión P2:** La distribución geográfica es homogénea entre los 7 países, "
-           "sin concentración dominante en un único mercado. Las preferencias de contenido "
-           "se concentran en Drama, Acción y Comedia.")
+    st.write("**Top 3 géneros favoritos:**")
+    for _, row in gen.iterrows():
+        pct = row['Usuarios'] / len(df) * 100
+        st.metric(row['Género'], f"{row['Usuarios']:,} usuarios", f"{pct:.1f}% del total")
+st.success("No existe un mercado dominante. Drama, Acción y Comedia concentran "
+           "las preferencias de contenido en toda la región.")
 
 st.markdown("---")
 
-# P3
-st.markdown("### P3 — ¿Qué variables numéricas presentan mayor correlación?")
-corr_df = df[num_cols].corr().round(3)
-st.dataframe(corr_df, use_container_width=True)
-st.success("**Conclusión P3:** Las correlaciones entre las tres variables numéricas son "
-           "prácticamente nulas (r < 0.01 en todos los pares). Las variables son "
-           "estadísticamente independientes entre sí, sin multicolinealidad.")
+# ── HALLAZGO 3 ───────────────────────────────────────────────────────────────
+st.subheader("🎫 Más tickets de soporte no significa menos consumo")
+st.write("Contra lo esperado, los usuarios que contactan más al soporte técnico "
+         "no consumen menos contenido.")
+
+col1, col2 = st.columns(2)
+with col1:
+    avg_by_tickets = df.groupby('customer_support_tickets')['monthly_watch_time_mins'].mean()
+    st.dataframe(
+        avg_by_tickets.reset_index().rename(columns={
+            'customer_support_tickets': 'Tickets de soporte',
+            'monthly_watch_time_mins': 'Promedio min/mes'
+        }).round(0),
+        use_container_width=True, hide_index=True)
+with col2:
+    st.metric("Relación entre tickets y consumo", "Sin correlación",
+              delta=f"r ≈ {corr_tickets:.3f}", delta_color="off")
+    st.write("El tiempo de visualización se mantiene estable sin importar "
+             "la cantidad de tickets generados.")
+st.success("Los tickets de soporte no son un indicador confiable de insatisfacción "
+           "ni de riesgo de abandono de la plataforma.")
 
 st.markdown("---")
 
-# P4
-st.markdown("### P4 — ¿Qué estructura latente revela el PCA?")
+# ── HALLAZGO 4 ───────────────────────────────────────────────────────────────
+st.subheader("🔬 Cada variable describe una dimensión distinta del usuario")
+st.write("El análisis estadístico confirmó que la edad, el consumo y los tickets "
+         "de soporte son aspectos **independientes** entre sí.")
+
 col1, col2, col3 = st.columns(3)
 col1.metric("PC1", f"{varianza[0]*100:.1f}%")
 col2.metric("PC2", f"{varianza[1]*100:.1f}%")
 col3.metric("PC3", f"{varianza[2]*100:.1f}%")
-st.success(f"**Conclusión P4:** Se necesitan las {n_80} componentes para superar el 80% de "
-           "varianza acumulada, confirmando que las variables son independientes. "
-           "PC1 combina edad y consumo (compromiso general), PC2 contrapone edad y consumo, "
-           "PC3 está dominada por tickets de soporte. El PCA aporta valor interpretativo, "
-           "no de compresión.")
+
+col1, col2, col3 = st.columns(3)
+col1.info("**👤 Edad**\nNo predice cuánto consume ni cuántos tickets genera un usuario.")
+col2.info("**📺 Consumo mensual**\nNo está relacionado con la edad ni con el soporte.")
+col3.info("**🎫 Tickets de soporte**\nNo depende del plan ni del tiempo de visualización.")
+
+st.success("Cada variable aporta información única e independiente. "
+           "Para entender a un usuario en profundidad es necesario "
+           "considerar las tres dimensiones juntas.")
 
 st.markdown("---")
 
-# P5
-st.markdown("### P5 — ¿Los usuarios con más tickets consumen menos?")
-st.metric("Correlación tickets vs. tiempo de visualización", f"r = {corr_tickets:.3f}")
-st.success(f"**Conclusión P5:** La correlación r = {corr_tickets:.3f} refuta la hipótesis. "
-           "Los tickets de soporte no se asocian con menor consumo. No deben usarse como "
-           "proxy aislado de insatisfacción o riesgo de abandono.")
+# ── LIMITACIONES ─────────────────────────────────────────────────────────────
+st.subheader("⚠️ Limitaciones")
+st.warning(
+    "El alcance de las conclusiones está condicionado por la información disponible "
+    "y las decisiones documentadas durante el proceso. El dataset no incluye información "
+    "sobre el contenido consumido ni sobre la fecha de alta del usuario, lo que restringe "
+    "el análisis al perfil estático del usuario en un momento dado. "
+    "La naturaleza sintética del dataset limita la generalización a datos reales "
+    "de plataformas de streaming.")
 
 st.markdown("---")
-st.subheader("Limitaciones")
-st.warning("""
-- El alcance de las conclusiones está condicionado por la información disponible y por las decisiones documentadas durante el proceso de limpieza.
-- El dataset no incluye información sobre el contenido consumido ni sobre la fecha de alta del usuario, lo que restringe el análisis al perfil estático del usuario en un momento dado.
-- `last_login_date` no fue imputada por riesgo de introducir sesgo, lo que limita cualquier análisis de recencia o actividad reciente.
-- Las correlaciones analizadas son de tipo lineal (Pearson); la ausencia de correlación lineal no descarta la existencia de relaciones no lineales entre variables.
-- La naturaleza sintética del dataset limita la generalización de los resultados a datos reales de plataformas de streaming.
-""")
 
-st.markdown("---")
-st.subheader("Próximos pasos")
-st.info("""
-Una mejora futura podría consistir en incorporar variables de contenido (títulos vistos y minutos por género), aplicar clustering (K-Means) sobre las componentes del PCA para segmentar perfiles de usuario, e integrar datos longitudinales para analizar la evolución del comportamiento a lo largo del tiempo.
-""")
+# ── MEJORAS FUTURAS ───────────────────────────────────────────────────────────
+st.subheader("🚀 ¿Qué se podría hacer a futuro?")
+st.info(
+    "Una mejora futura podría consistir en incorporar variables de contenido "
+    "(títulos vistos y minutos por género), aplicar clustering para segmentar perfiles "
+    "de usuario, e integrar datos longitudinales para analizar la evolución del "
+    "comportamiento a lo largo del tiempo.")
 
 st.markdown("---")
 col1, col2 = st.columns(2)
